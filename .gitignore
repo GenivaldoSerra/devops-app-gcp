@@ -1,6 +1,7 @@
 node_modules
 Dockerfile
 Dockerfile.*
+____server.js
 # Local .terraform directories
 .terraform/
 
