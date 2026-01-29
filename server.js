@@ -1,12 +1,38 @@
 const app = require('./app');
 const PORT = process.env.PORT || 3000;
 
+// const server = app.listen(PORT, () => {
+//   console.log(`Servidor rodando na porta ${PORT}`);
+// });
+
+// // graceful shutdown
+// process.on('SIGTERM', () => {
+//   console.log("SIGTERM recebido");
+//   server.close(() => process.exit(0));
+// });
+
+
+// Exportar app para testes
+module.exports = app;
+
+// Inicialização do Servidor
 const server = app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(JSON.stringify({ 
+    severity: 'INFO', 
+    message: `Servidor em produção na porta ${PORT}`,
+    node_version: process.version
+  }));
 });
 
-// graceful shutdown
+// GRACEFUL SHUTDOWN: O "Pulo do Gato" para Produção
 process.on('SIGTERM', () => {
-  console.log("SIGTERM recebido");
-  server.close(() => process.exit(0));
+  console.log(JSON.stringify({ severity: 'WARNING', message: 'SIGTERM recebido. Encerrando conexões...' }));
+  
+  server.close(() => {
+    console.log(JSON.stringify({ severity: 'INFO', message: 'Servidor encerrado com sucesso.' }));
+    process.exit(0);
+  });
+
+  // Força saída se não fechar em 15s (evita container zumbi)
+  setTimeout(() => process.exit(1), 15000);
 });
