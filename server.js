@@ -11,6 +11,8 @@ client.collectDefaultMetrics({ register });
 // Middlewares
 app.use(express.json());
 
+app.use(express.static('public'));
+
 // Métricas customizadas
 const httpRequestDuration = new client.Histogram({
   name: 'http_request_duration_seconds',
