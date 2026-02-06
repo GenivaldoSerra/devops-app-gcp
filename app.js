@@ -1,6 +1,8 @@
 const express = require('express');
 const client = require('prom-client');
 
+const app = express();
+
 // Configuração do Prometheus
 const register = new client.Registry();
 client.collectDefaultMetrics({ register });
